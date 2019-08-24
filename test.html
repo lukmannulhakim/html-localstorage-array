@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>html localstorage array</title>
+  <style>
+    #custBody {
+      border-collapse: collapse;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <td>Full Name</td><td>:</td>
+      <td>
+        <input type="text" name="name" id="name" placeholder="Name">
+      </td>
+    </tr>
+    <tr>
+      <td>Address</td><td>:</td>
+      <td>
+        <input type="text" name="address" id="address" placeholder="Address">
+      </td>
+    </tr>
+    <tr>
+      <td>Phone</td><td>:</td>
+      <td>
+        <input type="text" name="phone" id="phone" placeholder="Phone">
+      </td>
+    </tr>
+    <tr>
+      <td></td><td></td>
+      <td>
+        <input type="submit" class="add" value="Save">
+      </td>
+    </tr>
+  </table>
+  <br>
+  <br>
+  <div id="classcust">
+    <table id="custBody" border="1"></table>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+
+    var customer = [];
+    $(function () {
+      if (localStorage.customer)
+      {
+        customer = JSON.parse(localStorage.customer);
+        showCust();
+      }
+    });
+
+    function saveCust() {
+      if ( window.localStorage)
+      {
+        localStorage.customer = JSON.stringify(customer);
+      }
+    }
+
+    function deleteItem(index){
+      customer.splice(index,1);
+      showCust();
+      saveCust();
+    }
+
+    function clarForm(){
+      $("#name").val('');
+      $("#address").val('');
+      $("#phone").val('');
+    }
+
+    $('.add').click(function(){
+      var name   = $("#name").val();
+      var address   = $("#address").val();
+      var phone   = $("#phone").val();
+
+      var item = {name: name, address:address, phone:phone}; 
+      customer.push(item);
+      saveCust();
+      showCust();
+      clarForm();
+    });
+
+    function showCust() {
+      if (customer.length == 0) {
+        $("#classcust").css("visibility", "hidden");
+        return;
+      }
+
+      $("#classcust").css("visibility", "visible");
+      $("#custBody").empty();
+
+      for (var i in customer) {
+        var item = customer[i];
+        var row = '<tr><td>Name</td><td>Address</td><td>Phone</td><td>Option</td></tr><tr><td>'+ item.name +'</td><td>'+ item.address +'</td><td>'+ item.phone +'</td><td><a href="javascript:void(0)" onclick="deleteItem('+ i +')">DELETE</a></td></tr>';
+        $("#custBody").append(row);
+      }
+    }
+
+  </script>
+</body>
+</html>
